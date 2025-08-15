@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: account-service
+
+  r2dbc:
+    url: ${PG_URL_ACCOUNT}
+    username: ${PG_USER}
+    password: ${PG_PASSWORD}
+    show-sql: true
+    properties:
+      logLevel: DEBUG
+
+  sql:
+    initialization-mode: always
+    schema-location: classpath:schema.sql
+
+server:
+  port: 8383
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    hostname: localhost
+  client:
+    service-url:
+      default-zone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+logging:
+  level:
+    org.springframework.data.r2dbc: DEBUG
+    io.r2dbc.postgresql.QUERY: DEBUG
