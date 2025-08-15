@@ -10,9 +10,9 @@ spring:
     properties:
       logLevel: DEBUG
 
-  sql:
-    initialization-mode: always
-    schema-location: classpath:schema.sql
+  # sql:
+  #   initialization-mode: always
+  #   schema-location: classpath:schema.sql
 
 server:
   port: 8383

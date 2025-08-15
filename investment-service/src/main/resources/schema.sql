@@ -4,5 +4,5 @@ CREATE TABLE IF NOT EXISTS investment_wallet (
     balance DECIMAL(19, 2) NOT NULL DEFAULT 0.00,
     tax DECIMAL(5, 2) NOT NULL,
     initial_deposit DECIMAL(19, 2) NOT NULL,
-    user_id BIGINT NOT NULL,
+    user_id BIGINT NOT NULL
 );
