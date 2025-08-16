@@ -2,6 +2,10 @@ spring:
   application:
     name: auth-service
 
+user:
+  service:
+    url: http://localhost:8181
+
 server:
   port: 8282
 
@@ -14,3 +18,7 @@ eureka:
       default-zone: http://localhost:8761/eureka/
     register-with-eureka: true
     fetch-registry: true
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION}

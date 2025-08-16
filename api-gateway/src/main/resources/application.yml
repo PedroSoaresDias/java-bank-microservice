@@ -17,17 +17,13 @@ eureka:
       routes:
         - id: user-service
           uri: lb://user-service
-          predicates:
-            - Path=/users/**
+          predicates: Path=/users/**
         - id: auth-service
           uri: lb://auth-service
-          predicates:
-            - Path=/auth/**
+          predicates: Path=/auth/**
         - id: account-service
           uri: lb://account-service
-          predicates:
-            - Path=/accounts/**
+          predicates: Path=/accounts/**
         - id: investment-service
           uri: lb://investment-service
-          predicates:
-            - Path=/investments/**
+          predicates: Path=/investments/**
