@@ -31,7 +31,6 @@ eureka:
   instance:
     prefer-ip-address: true
     hostname: localhost
-# product.service.url=http://localhost:8181
   client:
     service-url:
       default-zone: http://localhost:8761/eureka/

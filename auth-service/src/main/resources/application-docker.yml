@@ -1,0 +1,11 @@
+eureka:
+  instance:
+    prefer-ip-address: true
+    hostname: java-bank-auth
+  client:
+    service-url:
+      default-zone: http://java-bank-discovery:8761/eureka/
+
+user:
+  service:
+    url: http://java-bank-user:8181

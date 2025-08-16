@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: user-service
+
+  r2dbc: 
+    url: ${PG_URL_USER}
+    username: ${PG_USER}
+    password: ${PG_PASSWORD}
+    show-sql: true
+
+eureka: 
+  instance:
+    prefer-ip-address: true
+    hostname: java-bank-user
+  client:
+    service-url:
+      default-zone: http://java-bank-discovery:8761/eureka/
