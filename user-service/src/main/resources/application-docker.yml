@@ -3,7 +3,7 @@ spring:
     name: user-service
 
   r2dbc: 
-    url: ${PG_URL_USER}
+    url: ${PG_URL_USER_DOCKER}
     username: ${PG_USER}
     password: ${PG_PASSWORD}
     show-sql: true

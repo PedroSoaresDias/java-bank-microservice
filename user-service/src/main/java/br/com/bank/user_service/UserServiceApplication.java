@@ -14,9 +14,19 @@ public class UserServiceApplication {
 
 	public static void main(String[] args) {
 
-		Dotenv dotenv = Dotenv.load();
+		Dotenv dotenv = Dotenv.configure()
+			.filename(".env") // ou ".env.docker"
+			.ignoreIfMissing()
+			.load();
 
-		System.setProperty("PG_URL_USER", dotenv.get("PG_URL_USER"));
+		String env = dotenv.get("SPRING_ENV", "local");
+
+		if (env.equals("docker")) {
+			System.setProperty("PG_URL_USER", dotenv.get("PG_URL_USER_DOCKER"));
+		} else {
+			System.setProperty("PG_URL_USER", dotenv.get("PG_URL_USER"));
+		}
+
 		System.setProperty("PG_USER", dotenv.get("PG_USER"));
 		System.setProperty("PG_PASSWORD", dotenv.get("PG_PASSWORD"));
 
