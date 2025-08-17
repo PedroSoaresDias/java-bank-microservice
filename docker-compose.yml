@@ -12,10 +12,23 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - pgdata-user:/var/lib/postgresql/data
     networks:
       - java-bank
 
+  postgres-account:
+    image: postgres
+    container_name: postgres-account
+    environment:
+      POSTGRES_DB: ${PG_DB_ACCOUNT}
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+    ports:
+      - 5433:5432
+    volumes:
+      - pgdata-account:/var/lib/postgresql/data
+    networks:
+      - java-bank
 
   java-bank-discovery:
     image: java-bank-discovery
@@ -41,6 +54,8 @@ services:
       - eureka.client.service-url.defaultZone=http://java-bank-discovery:8761/eureka/
     depends_on:
       - java-bank-discovery
+    volumes:
+      - ./.env:/app/.env
 
   java-bank-user:
     image: java-bank-user
@@ -70,7 +85,23 @@ services:
       - java-bank-discovery
     volumes:
       - ./.env:/app/.env
+
+  java-bank-account:
+    image: java-bank-account
+    container_name: java-bank-account
+    ports:
+      - 8383:8383
+    networks:
+      - java-bank
+    environment:
+      - eureka.client.service-url.defaultZone=http://java-bank-discovery:8761/eureka/
+    env_file:
+      - .env.docker
+    depends_on:
+      - java-bank-discovery
+      - postgres-account
   
 
 volumes:
-  pgdata:
+  pgdata-user:
+  pgdata-account:
