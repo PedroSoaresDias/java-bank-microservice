@@ -15,8 +15,8 @@ import reactor.core.publisher.Mono;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(UnauthorizatedAccessException.class)
-    public Mono<ResponseEntity<ErrorResponse>> handleUnauthorizated(UnauthorizatedAccessException ex,
+    @ExceptionHandler(AuthenticatedException.class)
+    public Mono<ResponseEntity<ErrorResponse>> handleUnauthorizated(AuthenticatedException ex,
             ServerWebExchange exchange) {
         return buildErrorResponse(HttpStatus.UNAUTHORIZED, ex.getMessage(), exchange);
     }

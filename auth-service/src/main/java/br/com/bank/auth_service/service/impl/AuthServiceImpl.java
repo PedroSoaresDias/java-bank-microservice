@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.bank.auth_service.domain.DTO.AuthRequest;
 import br.com.bank.auth_service.domain.DTO.AuthResponse;
-import br.com.bank.auth_service.exceptions.UnauthorizatedAccessException;
+import br.com.bank.auth_service.exceptions.AuthenticatedException;
 import br.com.bank.auth_service.service.AuthService;
 import br.com.bank.auth_service.service.UserService;
 import br.com.bank.auth_service.utils.JwtTokenGenerator;
@@ -30,7 +30,7 @@ public class AuthServiceImpl implements AuthService {
                 .flatMap(user -> {
                     if (!passwordEncoder.matches(request.password(), user.password())) {
                         log.warn("Senha inválida para usuário: {}", request.password());
-                        throw new UnauthorizatedAccessException("Credenciais inválidas");
+                        throw new AuthenticatedException("Credenciais inválidas");
                     }
 
                     String token = jwtGenerator.generateToken(user.id());
