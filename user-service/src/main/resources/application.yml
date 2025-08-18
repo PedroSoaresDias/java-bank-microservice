@@ -38,3 +38,9 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     io.r2dbc.postgresql.QUERY: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, metrics, info

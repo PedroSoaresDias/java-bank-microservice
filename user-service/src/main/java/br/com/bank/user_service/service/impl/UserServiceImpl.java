@@ -20,8 +20,13 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public Flux<UserResponse> findAllUsers() {
-        return userRepository.findAll().map(this::toDTO);
+    public Flux<UserResponse> findUsersPaginated(int page, int limit) {
+        int offset = (page - 1) * limit;
+
+        return userRepository.findAll()
+        .skip(offset)
+        .take(limit)
+        .map(this::toDTO);
     }
 
     @Override
@@ -38,18 +43,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Mono<Void> createUser(UserRequest request) {
+    public Mono<UserResponse> createUser(UserRequest request) {
         User user = new User();
-
         user.setName(request.name());
         user.setEmail(request.email());
         user.setPassword(passwordEncoder.encode(request.password()));
 
-        return userRepository.save(user).then();
+        return userRepository.save(user).map(this::toDTO);
     }
 
     @Override
-    public Mono<Void> updateUser(Long id, UserRequest request) {
+    public Mono<UserResponse> updateUser(Long id, UserRequest request) {
         return userRepository.findById(id)
                 .switchIfEmpty(Mono.error(new UserNotFoundException("Usuário não encontrado")))
                 .flatMap(user -> {
@@ -62,7 +66,7 @@ public class UserServiceImpl implements UserService {
 
                     return userRepository.save(user);
                 })
-                .then();
+                .map(this::toDTO);
     }
 
     @Override

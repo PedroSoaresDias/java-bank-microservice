@@ -7,15 +7,15 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface UserService {
-    Flux<UserResponse> findAllUsers();
+    Flux<UserResponse> findUsersPaginated(int page, int limit);
 
     Mono<UserResponse> findUserById(Long id);
 
     Mono<User> findUserByEmail(String email);
 
-    Mono<Void> createUser(UserRequest request);
+    Mono<UserResponse> createUser(UserRequest request);
 
-    Mono<Void> updateUser(Long id, UserRequest request);
+    Mono<UserResponse> updateUser(Long id, UserRequest request);
 
     Mono<Void> deleteUser(Long id);
 }
