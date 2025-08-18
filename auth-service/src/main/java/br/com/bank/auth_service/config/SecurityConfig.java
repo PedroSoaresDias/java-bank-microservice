@@ -23,8 +23,8 @@ public class SecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeExchange(auth -> auth
-                        .pathMatchers("/auth/**").permitAll() // libera login/registro
-                        .anyExchange().authenticated() // protege o resto
+                        .pathMatchers("/auth/**").permitAll()
+                        .anyExchange().authenticated()
                 )
                 .addFilterAt(jwtFilter, SecurityWebFiltersOrder.AUTHENTICATION)
                 .build();

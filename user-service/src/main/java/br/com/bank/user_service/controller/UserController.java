@@ -16,7 +16,6 @@ import br.com.bank.user_service.domain.DTO.UserRequest;
 import br.com.bank.user_service.domain.DTO.UserResponse;
 import br.com.bank.user_service.domain.model.User;
 import br.com.bank.user_service.service.UserService;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -44,13 +43,13 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<UserResponse> createUser(@Valid @RequestBody UserRequest request) {
+    public Mono<UserResponse> createUser(@RequestBody UserRequest request) {
         return userService.createUser(request);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public Mono<UserResponse> updateUser(@PathVariable("id") Long id, @Valid @RequestBody UserRequest request) {
+    public Mono<UserResponse> updateUser(@PathVariable("id") Long id, @RequestBody UserRequest request) {
         return userService.updateUser(id, request);
     }
 

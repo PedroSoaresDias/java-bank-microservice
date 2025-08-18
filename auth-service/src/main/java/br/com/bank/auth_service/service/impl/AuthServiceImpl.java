@@ -29,7 +29,7 @@ public class AuthServiceImpl implements AuthService {
                 .switchIfEmpty(Mono.error(new UsernameNotFoundException("Usuário não encontrado.")))
                 .flatMap(user -> {
                     if (!passwordEncoder.matches(request.password(), user.password())) {
-                        log.warn("Senha inválida para usuário: {}", request.password());
+                        log.warn("Senha inválida para usuário com email: {}", request.email());
                         throw new AuthenticatedException("Credenciais inválidas");
                     }
 

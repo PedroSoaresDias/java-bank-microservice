@@ -30,7 +30,7 @@ public class JwtTokenGenerator {
                     .sign(Algorithm.HMAC256(secret));
         } catch (JWTCreationException e) {
             log.warn("Falha na criação do token: {}", e.getMessage());
-            return null;
+            throw new RuntimeException("Erro ao gerar o token");
         }
     }
 }
