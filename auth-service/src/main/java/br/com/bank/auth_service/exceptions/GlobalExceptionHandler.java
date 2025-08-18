@@ -4,10 +4,10 @@ import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.support.WebExchangeBindException;
 import org.springframework.web.server.ServerWebExchange;
 
 import br.com.bank.auth_service.domain.DTO.ErrorResponse;
@@ -16,13 +16,15 @@ import reactor.core.publisher.Mono;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(AuthenticatedException.class)
-    public Mono<ResponseEntity<ErrorResponse>> handleUnauthorizated(AuthenticatedException ex,
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public Mono<ErrorResponse> handleUnauthorizated(AuthenticatedException ex,
             ServerWebExchange exchange) {
         return buildErrorResponse(HttpStatus.UNAUTHORIZED, ex.getMessage(), exchange);
     }
-    
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Mono<ResponseEntity<ErrorResponse>> handleValidationError(MethodArgumentNotValidException ex,
+
+    @ExceptionHandler(WebExchangeBindException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Mono<ErrorResponse> handleValidationError(WebExchangeBindException ex,
             ServerWebExchange exchange) {
         String errorMsg = ex.getBindingResult()
                 .getFieldErrors()
@@ -32,21 +34,26 @@ public class GlobalExceptionHandler {
 
         return buildErrorResponse(HttpStatus.BAD_REQUEST, errorMsg, exchange);
     }
-    
+
+    @ExceptionHandler(TokenGenerationException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Mono<ErrorResponse> handleTokenGenerationError(TokenGenerationException ex, ServerWebExchange exchange) {
+        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), exchange);
+    }
+
     @ExceptionHandler(Exception.class)
-    public Mono<ResponseEntity<ErrorResponse>> handleUnexpectedError(Exception ex, ServerWebExchange exchange) {
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Mono<ErrorResponse> handleUnexpectedError(Exception ex, ServerWebExchange exchange) {
         ex.printStackTrace(); // log interno
         return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Erro inesperado", exchange);
     }
 
-    private Mono<ResponseEntity<ErrorResponse>> buildErrorResponse(HttpStatus status, String message, ServerWebExchange exchange) {
-        ErrorResponse error = new ErrorResponse(
-            status.value(),
-            status.getReasonPhrase(),
-            message,
-            exchange.getRequest().getPath().value(),
-            LocalDateTime.now()
-        );
-        return Mono.just(ResponseEntity.status(status).body(error));
+    private Mono<ErrorResponse> buildErrorResponse(HttpStatus status, String message, ServerWebExchange exchange) {
+        return Mono.just(new ErrorResponse(
+                status.value(),
+                status.getReasonPhrase(),
+                message,
+                exchange.getRequest().getPath().value(),
+                LocalDateTime.now()));
     }
 }

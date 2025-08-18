@@ -9,6 +9,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 
+import br.com.bank.auth_service.exceptions.TokenGenerationException;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
@@ -30,7 +31,7 @@ public class JwtTokenGenerator {
                     .sign(Algorithm.HMAC256(secret));
         } catch (JWTCreationException e) {
             log.warn("Falha na criação do token: {}", e.getMessage());
-            throw new RuntimeException("Erro ao gerar o token");
+            throw new TokenGenerationException("Erro ao gerar o token");
         }
     }
 }
