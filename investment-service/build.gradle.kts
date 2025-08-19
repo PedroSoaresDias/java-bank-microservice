@@ -34,8 +34,6 @@ dependencies {
 	implementation("io.github.cdimascio:dotenv-java:2.2.3")
 	compileOnly("org.projectlombok:lombok")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
-	implementation("org.flywaydb:flyway-core")
-	runtimeOnly("org.postgresql:postgresql")
 	runtimeOnly("org.postgresql:r2dbc-postgresql")
 	annotationProcessor("org.projectlombok:lombok")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
