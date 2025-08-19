@@ -83,9 +83,10 @@ public class AccountServiceImpl implements AccountService {
     public Mono<AccountResponse> deposit(DepositRequest request) {
         return SecurityUtil.getCurrentUserId()
                 .flatMap(userId -> accountRepository.findByPix(request.pix())
+                        .switchIfEmpty(Mono.error(new AccountNotFoundException("Conta não encontrada")))
                         .flatMap(wallet -> {
                             if (!wallet.getUserId().equals(userId)) {
-                                return Mono.error(new UnauthorizatedAccessException("Acesso não autorizado"));
+                                return Mono.error(new UnauthorizatedAccessException("Você não tem permissão para depositar nessa conta"));
                             }
                             wallet.deposit(request.amount());
                             log.info("Usuário {} realizou depósito de {} na conta {}", userId, request.amount(),
@@ -100,9 +101,10 @@ public class AccountServiceImpl implements AccountService {
     public Mono<AccountResponse> withdraw(WithdrawRequest request) {
         return SecurityUtil.getCurrentUserId()
                 .flatMap(userId -> accountRepository.findByPix(request.pix())
+                        .switchIfEmpty(Mono.error(new AccountNotFoundException("Conta não encontrada")))
                         .flatMap(wallet -> {
                             if (!wallet.getUserId().equals(userId)) {
-                                return Mono.error(new UnauthorizatedAccessException("Acesso não autorizado"));
+                                return Mono.error(new UnauthorizatedAccessException("Você não tem permissão para saquar nesta conta"));
                             }
                             if (wallet.getBalance().compareTo(request.amount()) < 0) {
                                 return Mono.error(new NoFundsEnoughException("Saldo insuficiente"));
@@ -119,15 +121,17 @@ public class AccountServiceImpl implements AccountService {
     public Mono<AccountResponse> transfer(TransferPixRequest request) {
         return SecurityUtil.getCurrentUserId()
                 .flatMap(userId -> accountRepository.findByPix(request.fromPix())
+                        .switchIfEmpty(Mono.error(new AccountNotFoundException("Conta de origem não encontrada")))
                         .flatMap(fromWallet -> {
                             if (!fromWallet.getUserId().equals(userId)) {
-                                return Mono.error(new UnauthorizatedAccessException("Acesso não autorizado"));
+                                return Mono.error(new UnauthorizatedAccessException("Você não tem permissão para fazer transferência desta conta para outra"));
                             }
                             if (fromWallet.getBalance().compareTo(request.amount()) < 0) {
                                 return Mono.error(new NoFundsEnoughException("Saldo insuficiente"));
                             }
 
                             return accountRepository.findByPix(request.toPix())
+                                    .switchIfEmpty(Mono.error(new AccountNotFoundException("Conta de destino não encontrada")))
                                     .flatMap(toWallet -> {
                                         fromWallet.withdraw(request.amount());
                                         toWallet.deposit(request.amount());
