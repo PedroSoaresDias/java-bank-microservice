@@ -9,15 +9,15 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface AccountService {
-    Flux<AccountResponse> getAllMyAccounts();
+    Flux<AccountResponse> getAllMyAccounts(int page, int limit);
 
     Mono<AccountResponse> getAccountByPix(String pix);
     
-    Mono<Void> createAccount(CreateAccountRequest request);
+    Mono<AccountResponse> createAccount(CreateAccountRequest request);
 
-    Mono<Void> deposit(DepositRequest request);
+    Mono<AccountResponse> deposit(DepositRequest request);
 
-    Mono<Void> withdraw(WithdrawRequest request);
+    Mono<AccountResponse> withdraw(WithdrawRequest request);
 
-    Mono<Void> transfer(TransferPixRequest request);
+    Mono<AccountResponse> transfer(TransferPixRequest request);
 }

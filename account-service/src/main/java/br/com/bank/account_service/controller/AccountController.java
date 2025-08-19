@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,6 +16,7 @@ import br.com.bank.account_service.domain.DTO.DepositRequest;
 import br.com.bank.account_service.domain.DTO.TransferPixRequest;
 import br.com.bank.account_service.domain.DTO.WithdrawRequest;
 import br.com.bank.account_service.service.AccountService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -26,8 +28,8 @@ public class AccountController {
     private final AccountService accountService;
 
     @GetMapping
-    public Flux<AccountResponse> getAllAccounts() {
-        return accountService.getAllMyAccounts();
+    public Flux<AccountResponse> getAllAccounts(@RequestParam(defaultValue = "1", name = "page") int page, @RequestParam(defaultValue = "10", name = "limit") int limit) {
+        return accountService.getAllMyAccounts(page, limit);
     }
 
     @GetMapping("/{pix}")
@@ -37,25 +39,22 @@ public class AccountController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<Void> createAccount(@RequestBody CreateAccountRequest request) {
+    public Mono<AccountResponse> createAccount(@Valid @RequestBody CreateAccountRequest request) {
         return accountService.createAccount(request);
     }
 
     @PostMapping("/deposit")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public Mono<Void> deposit(@RequestBody DepositRequest request) {
+    public Mono<AccountResponse> deposit(@Valid @RequestBody DepositRequest request) {
         return accountService.deposit(request);
     }
 
     @PostMapping("/withdraw")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public Mono<Void> withdraw(@RequestBody WithdrawRequest request) {
+    public Mono<AccountResponse> withdraw(@Valid @RequestBody WithdrawRequest request) {
         return accountService.withdraw(request);
     }
 
     @PostMapping("/transfer")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public Mono<Void> transfer(@RequestBody TransferPixRequest request) {
+    public Mono<AccountResponse> transfer(@Valid @RequestBody TransferPixRequest request) {
         return accountService.transfer(request);
     }
 }
