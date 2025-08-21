@@ -26,6 +26,10 @@ logging:
 
 server: 
   port: 8181
+  compression:
+    enabled: true
+    mime-types: application/json, application/xml, text/html, text/plain
+    min-response-size: 1024
 
 eureka: 
   instance:
