@@ -33,5 +33,14 @@ eureka:
 
 logging:
   level:
+    br.com.bank.investment_service.adapter: DEBUG
     org.springframework.data.r2dbc: DEBUG
     io.r2dbc.postgresql.QUERY: DEBUG
+
+user:
+  service:
+    url: http://localhost:8181
+
+account:
+  service:
+    url: http://localhost:8383
