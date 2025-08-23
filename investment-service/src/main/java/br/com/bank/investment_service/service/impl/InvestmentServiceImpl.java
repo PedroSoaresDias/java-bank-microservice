@@ -1,6 +1,7 @@
 package br.com.bank.investment_service.service.impl;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.bank.investment_service.domain.DTO.CreateInvestmentRequest;
 import br.com.bank.investment_service.domain.DTO.DepositRequest;
@@ -82,6 +83,7 @@ public class InvestmentServiceImpl implements InvestmentService {
 	}
 
 	@Override
+	@Transactional
 	public Mono<InvestmentResponse> invest(TransferPixRequest request) {
 		return SecurityUtil.getCurrentUserId()
 				.flatMap(userId -> userService.getUserById(userId)
@@ -114,6 +116,7 @@ public class InvestmentServiceImpl implements InvestmentService {
 	}
 
 	@Override
+	@Transactional
 	public Mono<InvestmentResponse> withdraw(TransferPixRequest request) {
 		return SecurityUtil.getCurrentUserId()
 				.flatMap(userId -> userService.getUserById(userId)
@@ -144,7 +147,7 @@ public class InvestmentServiceImpl implements InvestmentService {
 	}
 
 	@Override
-	public Mono<InvestmentResponse> updateYield() {
+	public Flux<InvestmentResponse> updateYield() {
 		return SecurityUtil.getCurrentUserId()
 				.flatMapMany(userId -> investmentRepository.findAllByUserId(userId))
 				.map(wallet -> {
@@ -152,7 +155,6 @@ public class InvestmentServiceImpl implements InvestmentService {
 					return wallet;
 				})
 				.flatMap(investmentRepository::save)
-				.next()
 				.map(this::toDTO);
 	}
 

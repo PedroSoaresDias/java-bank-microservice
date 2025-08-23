@@ -53,7 +53,7 @@ public class InvestmentController {
     }
 
     @PostMapping("/yield/update")
-    public Mono<InvestmentResponse> updateYield() {
+    public Flux<InvestmentResponse> updateYield() {
         return investmentService.updateYield();
     }
 }

@@ -17,5 +17,5 @@ public interface InvestmentService {
 
     Mono<InvestmentResponse> withdraw(TransferPixRequest request);
 
-    Mono<InvestmentResponse> updateYield();
+    Flux<InvestmentResponse> updateYield();
 }
