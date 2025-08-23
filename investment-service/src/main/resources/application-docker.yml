@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: investment-service
+
+  r2dbc:
+    url: ${PG_URL_INVESTMENT_DOCKER}
+    username: ${PG_USER}
+    password: ${PG_PASSWORD}
+    show-sql: true
+    properties:
+      logLevel: DEBUG
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    hostname: java-bank-investment
+  client:
+    service-url:
+      default-zone: http://java-bank-discovery:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+user:
+  service:
+    url: http://java-bank-user:8181
+
+account:
+  service:
+    url: http://java-bank-account:8383
