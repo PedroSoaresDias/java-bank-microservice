@@ -127,7 +127,7 @@ public class InvestmentServiceImpl implements InvestmentService {
 								.flatMap(wallet -> {
 									if (!wallet.getUserId().equals(userId)) {
 										return Mono.error(new UnauthorizatedAccessException(
-												"Você não tem permissão para investir nesta carteira."));
+												"Você não tem permissão para resgatar o investimento desta carteira."));
 									}
 
 									if (wallet.getBalance().compareTo(request.amount()) < 0) {
